@@ -1,3 +1,6 @@
+#ifndef QUEUE_H
+#define QUEUE_H
+
 template<class T> class Queue {
 private:
     DynamicArray<T> buffer;
@@ -21,7 +24,11 @@ private:
     }
 
 public:
-    Queue(int cap = 4) : buffer(cap), capacity(cap) {}
+    Queue(int cap = 4) : buffer(cap), capacity(cap) {
+        if (cap <= 0) {
+            throw std::invalid_argument("Capacity must be > 0");
+        }
+    }
 
     void Enqueue(const T& item) {
         if (size == capacity){
@@ -62,4 +69,12 @@ public:
     int GetSize() const {
         return size;
     }
+
+    void Clear() {
+        head = 0;
+        tail = 0;
+        size = 0;
+    }
 };
+
+#endif

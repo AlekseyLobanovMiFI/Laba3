@@ -1,3 +1,6 @@
+#ifndef STACK_H
+#define STACK_H
+
 template<class T> class Stack {
 private:
     MutableArraySequence<T> data;
@@ -25,3 +28,5 @@ public:
         return data.GetLength() == 0;
     }
 };
+
+#endif
