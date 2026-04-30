@@ -175,21 +175,6 @@ public:
         length--;
     }
 
-    void RemoveFirst() {
-        if (!head) {
-            throw std::out_of_range("EmptyList");
-        }
-
-        Node* temp = head;
-        head = head->next;
-        delete temp;
-
-        if (length == 0) {
-            tail = head;
-        }
-
-        length--;
-    }
 
     void RemoveLast() {
         if (length == 0) {
@@ -199,7 +184,7 @@ public:
         if (length == 1) {
             delete head;
             head = nullptr;
-            tail = head;
+            tail = nullptr;
         } else {
             Node* current = head;
             while (current->next != tail) {

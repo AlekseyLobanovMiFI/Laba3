@@ -1,6 +1,8 @@
 #ifndef STACK_H
 #define STACK_H
 
+#include "mutablearraysequence.h"
+
 template<class T> class Stack {
 private:
     MutableArraySequence<T> data;
@@ -16,7 +18,7 @@ public:
         }
 
         T val = data.GetLast();
-        data = data.RemoveLast();
+        data.RemoveLast();
         return val;
     }
 
@@ -26,6 +28,20 @@ public:
 
     bool IsEmpty() const {
         return data.GetLength() == 0;
+    }
+
+    void Clear() {
+        while (!IsEmpty()) {
+            Pop();
+        }
+    }
+
+    int Size() const {
+        return data.GetLength();
+    }
+
+    T Get(int index) const {
+        return data.Get(index);
     }
 };
 

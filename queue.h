@@ -1,6 +1,8 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+#include "dynamicArray.h"
+
 template<class T> class Queue {
 private:
     DynamicArray<T> buffer;
@@ -74,6 +76,18 @@ public:
         head = 0;
         tail = 0;
         size = 0;
+    }
+
+    int Size() const {
+        return size;
+    }
+    
+    T Get(int index) const {
+        if (index < 0 || index >= size){
+            throw std::out_of_range("Index");
+        }
+
+        return buffer[(head + index) % capacity];
     }
 };
 

@@ -1,6 +1,8 @@
 #ifndef DEQUE_H
 #define DEQUE_H
 
+#include "listsequence.h"
+
 template<class T> class Deque{
 private:
     ListSequence<T> data;
@@ -48,6 +50,16 @@ public:
 
     int Size() const {
         return data.GetLength();
+    }
+
+    void Clear() {
+        while (!IsEmpty()) {
+            PopFront();
+        }
+    }
+    
+    T Get(int index) const {
+        return data.Get(index);
     }
 };
 

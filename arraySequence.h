@@ -35,7 +35,7 @@ public:
         return array.Get(index);
     }
 
-    ArraySequence<T>* RemoveLast() override {
+    ArraySequence<T>* RemoveLast(){
         if (GetLength() == 0){
             throw std::out_of_range("Empty sequence");
         }
