@@ -26,8 +26,8 @@ private:
     }
 
 public:
-    Queue(int cap = 4) : buffer(cap), capacity(cap) {
-        if (cap <= 0) {
+    Queue(int initialCapacity = 4) : buffer(initialCapacity), capacity(initialCapacity) {
+        if (initialCapacity <= 0) {
             throw std::invalid_argument("Capacity must be > 0");
         }
     }
