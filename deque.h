@@ -6,55 +6,46 @@
 
 template<class T> class Deque {
 private:
-    DynamicArray<DynamicArray<T>*> blocks;
+    static const int blockSize = 2;
+
+    struct Block{
+        T items[blockSize];
+
+        T& operator[](int i){
+            return items[i];
+        }
+
+        const T& operator[](int i) const{
+            return items[i];
+        }
+    };
+
+    MutableArraySequence<Block> blocks;
 
     int headBlock, headIndex;
     int tailBlock, tailIndex;
 
     int size;
-    const int blockSize = 4;
-
-    void AddBlockBack() {
-        int oldSize = blocks.GetSize();
-        blocks.Resize(oldSize + 1);
-        blocks[oldSize] = new DynamicArray<T>(blockSize);
-    }
-
-    void AddBlockFront() {
-        int oldSize = blocks.GetSize();
-        blocks.Resize(oldSize + 1);
-
-        for (int i = oldSize; i > 0; i--) {
-            blocks[i] = blocks[i - 1];
-        }
-
-        blocks[0] = new DynamicArray<T>(blockSize);
-
-        headBlock++;
-        tailBlock++;
-    }
 
 public:
-    Deque() : blocks(1), size(0) {
-        blocks[0] = new DynamicArray<T>(blockSize);
-
+    Deque() : blocks(0), size(0) {
         headBlock = 0;
         headIndex = 0;
 
-        tailBlock = 0;
-        tailIndex = 0;
+        tailBlock = -1;
+        tailIndex = blockSize;
     }
 
     void PushBack(const T& item) {
         if (tailIndex == blockSize) {
-            if (tailBlock == blocks.GetSize() - 1) {
-                AddBlockBack();
+            if (tailBlock == blocks.GetLength() - 1) {
+                blocks.Append(Block());
             }
             tailBlock++;
             tailIndex = 0;
         }
 
-        (*blocks[tailBlock])[tailIndex] = item;
+        blocks[tailBlock][tailIndex] = item;
         tailIndex++;
         size++;
     }
@@ -62,7 +53,8 @@ public:
     void PushFront(const T& item) {
         if (headIndex == 0) {
             if (headBlock == 0) {
-                AddBlockFront();
+                blocks.Prepend(Block());
+                tailBlock++;
             } else {
                 headBlock--;
             }
@@ -70,7 +62,7 @@ public:
         }
 
         headIndex--;
-        (*blocks[headBlock])[headIndex] = item;
+        blocks[headBlock][headIndex] = item;
         size++;
     }
 
@@ -79,7 +71,7 @@ public:
             throw std::out_of_range("Empty deque");
         }
 
-        T val = (*blocks[headBlock])[headIndex];
+        T val = blocks[headBlock][headIndex];
 
         headIndex++;
         size--;
@@ -103,7 +95,7 @@ public:
         }
 
         tailIndex--;
-        T val = (*blocks[tailBlock])[tailIndex];
+        T val = blocks[tailBlock][tailIndex];
 
         size--;
         return val;
@@ -114,7 +106,7 @@ public:
         if (size == 0) {
             throw std::out_of_range("Empty deque");
         }
-        return (*blocks[headBlock])[headIndex];
+        return blocks[headBlock][headIndex];
     }
 
     T Back() const {
@@ -131,7 +123,7 @@ public:
         }
 
         index--;
-        return (*blocks[block])[index];
+        return blocks[block][index];
     }
 
     T Get(int index) const {
@@ -146,7 +138,7 @@ public:
 
         int block = headBlock + blockShift;
 
-        return (*blocks[block])[innerIndex];
+        return blocks[block][innerIndex];
     }
 
     bool IsEmpty() const {
